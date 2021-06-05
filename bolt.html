@@ -1,0 +1,115 @@
+<body>
+<canvas height = 600 width=600></canvas>
+<script>
+
+chanceOfBranching = 0.007
+document.body.bgColor="#000000"
+can = document.getElementsByTagName("canvas")[0]
+c = can.getContext("2d")
+lgh = new Array(can.width * can.height).fill(0)
+ hm = c.getImageData(0,0,can.width,can.height)
+function Chance(per){
+    var rand = Math.random()
+    if(rand<per){
+        return 1
+    }else{
+        return 0
+    }
+}
+can.style.position = "absolute"
+can.style.left = "0px"
+can.style.top="0px"
+document.body.style.overflow = "hidden"
+function pon(){
+ 
+
+    return Math.round((Math.random()*2)-1)
+}
+    ;(function Animate(){
+
+   //This resets the lgh array !!! yoohoo!
+   lgh = new Array(can.width * can.height).fill(0)
+    lgh[Math.round(can.width/2)] = 1
+//End This resets the lgh array !!! yoohoo!
+
+for(n=0;n<lgh.length;n++){
+y = Math.floor(n/can.width)
+x = n-(can.width*y)
+
+   if(n<lgh.length-can.width && x>3 && x<can.width-3){
+
+
+if(lgh[n]==1){
+    if(Chance(chanceOfBranching)){
+        lgh[n+can.width+1]=3
+        lgh[n+can.width-1]=2
+    }else{
+    lgh[n+can.width+pon()]=1
+    }
+
+}
+
+if(lgh[n]==2){
+
+    if(Chance(chanceOfBranching/3)){
+        lgh[n+can.width+1]=3
+        lgh[n+can.width-1]=2
+    }else{
+
+        if(Chance(0.7)){
+        lgh[n+can.width+pon()-1]=2
+        }else{
+lgh[n+can.width+1]=2
+        }
+    }
+
+  
+}
+
+if(lgh[n]==3){
+
+    if(Chance(chanceOfBranching/3)){
+        lgh[n+can.width+1]=3
+        lgh[n+can.width-1]=2
+    }else{
+
+
+        if(Chance(0.7)){
+            lgh[n+can.width+pon()+1]=3
+        }else{
+lgh[n+can.width-1]=3
+        }
+
+        
+    }
+
+   
+}
+
+
+
+}
+
+}
+for(n=0;n<hm.data.length;n+=4){
+    y = Math.floor((n/4)/can.width)
+x = (n/4)-(can.width*y)
+
+   // hm.data[n] = 0
+//hm.data[n+1] = 0
+//hm.data[n+2] = 0
+    hm.data[n] +=  ( lgh[n/4]*60*Math.sin(y/50)  )
+hm.data[n+1] += (60*-Math.sin(y/50)*lgh[n/4]  )
+hm.data[n+2] += (lgh[n/4]*255  )
+hm.data[n+3]=(lgh[n/4]*255  )
+}
+c.putImageData(hm,0,0)
+
+
+        can.style.width = innerWidth
+can.style.height = innerHeight
+
+setTimeout(Animate,1)
+})()
+</script>
+</body>
